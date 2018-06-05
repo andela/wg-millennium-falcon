@@ -75,5 +75,4 @@ class FeedbackTestCase(WorkoutManagerTestCase):
         '''
         Tests the feedback form as a logged out user
         '''
-
         self.send_feedback(logged_in=False)

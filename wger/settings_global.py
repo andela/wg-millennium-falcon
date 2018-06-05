@@ -86,21 +86,34 @@ INSTALLED_APPS = (
 
     # django-bower for installing bower packages
     'djangobower',
+
+    # for social logins
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # Providers supported
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
+
+    # django extensions
+    'django_extensions'
 )
 
 # added list of external libraries to be installed by bower
 BOWER_INSTALLED_APPS = (
-    'jquery#2.1.x',
-    'bootstrap',
+    'bootstrap#3.3.5',
+    'components-font-awesome#4.7.x',
     'd3',
-    'shariff',
-    'tinymce-dist',
     'DataTables',
-    'components-font-awesome',
-    'tinymce',
-    'metrics-graphics',
     'devbridge-autocomplete#1.2.x',
+    'jquery#2.1.x',
+    'metrics-graphics',
+    'shariff#1.24.1',
     'sortablejs#1.4.x',
+    'tinymce',
+    'tinymce-dist',
 )
 
 
@@ -128,10 +141,11 @@ MIDDLEWARE_CLASSES = (
     'django_mobile.middleware.SetFlavourMiddleware',
 )
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'wger.utils.helpers.EmailAuthBackend'
-)
+    'wger.utils.helpers.EmailAuthBackend',
+
+]
 
 TEMPLATES = [
     {
@@ -310,7 +324,7 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 # The default is not DEBUG, override if needed
@@ -370,3 +384,8 @@ WGER_SETTINGS = {
     'EMAIL_FROM': 'wger Workout Manager <wger@example.com>',
     'TWITTER': False
 }
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
