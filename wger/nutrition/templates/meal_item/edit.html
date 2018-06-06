@@ -4,13 +4,7 @@
 {% load wger_extras %}
 
 
-{% block title %}
-{% if plan_pk %}
-    {% trans "Add a new meal"  %}
-{% else %}
-    {% trans "Edit meal item" %}
-{% endif %}
-{% endblock %}
+{% block title %}{% trans "Edit meal item" %}{% endblock %}
 
 
 {% block header %}
@@ -31,9 +25,6 @@ $(document).ready(function() {
       class="form-horizontal">
     {% csrf_token %}
     {% render_form_errors form %}
-    {% if plan_pk %}
-    {% render_form_field form.time %}
-    {% endif %}
     {{form.ingredient}}
 
     <div class="form-group {% if field.errors %}has-error{% endif %}" id="form-id_ingredient_searchfield">
