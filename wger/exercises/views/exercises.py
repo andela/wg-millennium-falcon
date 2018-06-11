@@ -44,7 +44,8 @@ from wger.manager.models import WorkoutLog
 from wger.exercises.models import (
     Exercise,
     Muscle,
-    ExerciseCategory
+    ExerciseCategory,
+    Author
 )
 from wger.utils.generic_views import (
     WgerFormMixin,
@@ -59,6 +60,7 @@ from wger.utils.widgets import (
 )
 from wger.config.models import LanguageConfig
 from wger.weight.helpers import process_log_entries
+from wger.core.models import Language
 
 
 logger = logging.getLogger(__name__)
@@ -78,6 +80,15 @@ class ExerciseListView(ListView):
         Filter to only active exercises in the configured languages
         '''
         languages = load_item_languages(LanguageConfig.SHOW_ITEM_EXERCISES)
+        language_code = self.request.GET.get('language', None)
+        language = None
+        if language_code:
+            language = Language.objects.filter(short_name=language_code).first().id
+            return Exercise.objects.accepted() \
+                .filter(language=language) \
+                .order_by('category__id') \
+                .select_related()
+
         return Exercise.objects.accepted() \
             .filter(language__in=languages) \
             .order_by('category__id') \
@@ -176,6 +187,8 @@ class ExercisesEditAddView(WgerFormMixin):
             muscles_secondary = ModelMultipleChoiceField(queryset=Muscle.objects.all(),
                                                          widget=TranslatedOriginalSelectMultiple(),
                                                          required=False)
+            license_author = ModelChoiceField(queryset=Author.objects.all(),
+                                              widget=TranslatedSelect(), required=False)
 
             class Meta:
                 model = Exercise
