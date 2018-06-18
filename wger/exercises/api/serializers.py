@@ -59,6 +59,7 @@ class ExerciseInfoSerializer(serializers.HyperlinkedModelSerializer):
     equipment = serializers.StringRelatedField(many=True)
     muscles_secondary = serializers.StringRelatedField(many=True)
     license = serializers.StringRelatedField()
+    license_author = serializers.StringRelatedField(read_only=True)
     exerciseimage_set = ExerciseImageSerializer(many=True, read_only=True)
 
     class Meta:

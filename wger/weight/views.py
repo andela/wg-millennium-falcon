@@ -42,6 +42,7 @@ from wger.weight.models import WeightEntry
 from wger.weight import helpers
 from wger.utils.helpers import check_access
 from wger.utils.generic_views import WgerFormMixin
+from django.contrib.auth.models import User
 
 
 logger = logging.getLogger(__name__)
@@ -168,6 +169,33 @@ def get_weight_data(request, username=None):
     '''
 
     is_owner, user = check_access(request.user, username)
+
+    date_min = request.GET.get('date_min', False)
+    date_max = request.GET.get('date_max', True)
+
+    if date_min and date_max:
+        weights = WeightEntry.objects.filter(user=user,
+                                             date__range=(date_min, date_max))
+    else:
+        weights = WeightEntry.objects.filter(user=user)
+
+    chart_data = []
+
+    for i in weights:
+        chart_data.append({'date': i.date,
+                           'weight': i.weight})
+
+    # Return the results to the client
+    return Response(chart_data)
+
+
+@api_view(['GET'])
+def compare_weight_data(request, username=None):
+    '''
+    Process the data to pass it to the JS libraries to generate an SVG image
+    '''
+
+    user = User.objects.get(username=username)
 
     date_min = request.GET.get('date_min', False)
     date_max = request.GET.get('date_max', True)
