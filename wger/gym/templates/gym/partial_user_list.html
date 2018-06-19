@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'bower_components/datatables/media/css/dataTables.bootstrap.min.css' %}">
 <script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.min.js' %}" ></script>
 <script src="{% static 'bower_components/datatables/media/js/dataTables.bootstrap.min.js' %}" ></script>
+<script src="{% static 'js/compare_weight.js' %}"></script>
 <script>
 $(document).ready( function () {
     /* Make table sortable */
@@ -66,15 +67,22 @@ $(document).ready( function () {
     }
 </style>
 
+<div class="pull-right">
+    <button id="compare" class="btn btn-success btn-sm" style="margin-top: -10px">Compare</button>
+</div>
+
+<div id="compare_weight_diagrams"></div>
+
 <div class="nav nav-tabs">
     <button class="tablinks" onclick="openUsers(event, 'Active')">Active</button>
     <button class="tablinks" onclick="openUsers(event, 'Inactive')">Inactive</button>
 </div>
-  
+
 <div id="Active" class="tabcontent">
     <table class="table table-hover" id="main_member_list">
         <thead>
         <tr>
+            <th></th>
             {% for key in user_table.keys %}
                 <th>{{ key }}</th>
             {% endfor %}
@@ -85,6 +93,9 @@ $(document).ready( function () {
         
         {% if current_user.obj.is_active %}
         <tr>
+            <td>
+                <input type="checkbox" class="checkbox" id="{{current_user.obj.username}}" value="{{current_user.obj.first_name}} {{current_user.obj.last_name}}">
+            </td>
             <td>
                 {{current_user.obj.pk}}
             </td>
